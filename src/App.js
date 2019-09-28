@@ -4,12 +4,14 @@ import Navbar from "./Components/Layout/Navbar";
 import Users from "./Components/Users/Users";
 import axios from "axios";
 import Search from "./Components/Users/Search";
+import Alert from "./Components/Layout/Alert";
 
 class App extends Component {
   state = {
     users: [],
     loading: false,
-    showClear: false
+    showClear: false,
+    alert: null
   };
 
   // async componentDidMount() {
@@ -35,16 +37,24 @@ class App extends Component {
     this.setState({ users: [], loading: false });
   };
 
+  //set alert when users search before entering anything
+  setAlert = (msg, type) => {
+    this.setState({ alert: { msg, type } });
+    setTimeout(() => this.setState({ alert: null }), 2000);
+  };
+
   render() {
     const { users, loading } = this.state;
     return (
       <div className="App">
         <Navbar />
         <div className="container">
+          <Alert alert={this.state.alert} />
           <Search
             searchUsers={this.searchUsers}
             clearUsers={this.clearUsers}
             showClear={users.length > 0 ? true : false}
+            setAlert={this.setAlert}
           />
           <Users loading={loading} users={this.state.users} />
         </div>
